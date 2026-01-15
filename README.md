@@ -178,10 +178,13 @@ Each language has its own spaCy NER model trained on native text:
 
 ### Is this admissible in court?
 
-**Yes.** AI doesn't produce evidence—it produces a roadmap. You still verify everything against the original documents. Same way Ctrl+F doesn't break chain of custody, neither does pattern recognition on anonymized data.
+**Yes.** The AI isn't evidence. It's a flashlight.
 
-Quote from the original article:
-> *"Say the AI finds: 'PERSON_A met PERSON_B three days before the transfer to COMPANY_X.' That's not a conclusion you present in court. That's a hint where to look. You go back to the original documents. Page 847, page 1,203, page 3,421. That's where the evidence lives."*
+In court, you show the original data and explain how you reached your conclusion. Defense can examine those same documents. They don't need to audit the algorithm, because the algorithm didn't produce evidence—just a roadmap.
+
+Same way Ctrl+F doesn't break chain of custody, neither does pattern recognition on anonymized data. It speeds up the investigation. It doesn't replace verification.
+
+**Example:** Say the AI finds: *"PERSON_A met PERSON_B three days before the transfer to COMPANY_X."* That's not a conclusion you present in court. That's a hint where to look. You go back to the original documents—page 847, page 1,203, page 3,421. That's where the evidence lives. The AI helped you find where to look—in 20 minutes instead of 5 days.
 
 ### How accurate is the detection?
 
