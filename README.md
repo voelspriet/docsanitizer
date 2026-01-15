@@ -21,23 +21,20 @@ You have confidential documents. Local AI would be safe, but it's painfully slow
 
 AIWhisperer gives you a middle path: sanitize locally, analyze in the cloud, decode locally. You get cloud AI speed with reduced exposure of sensitive data.
 
-## What This Tool Does
+## How It Works
 
-AIWhisperer helps you use AI on confidential documents while minimizing the risk of leaking sensitive data to cloud servers.
-
-**How it works:** The tool replaces names, phones, addresses, and other identifiers with placeholders before you upload. After AI analysis, it restores the original values locally.
-
-```
-Your documents → [sanitize locally] → AI analyzes placeholders → [decode locally] → Real names restored
-```
-
-**The pipeline:**
-
-1. **Convert** - Extract text from PDFs (with OCR for scanned pages)
-2. **Split** - Automatically split large files into manageable chunks (500 pages each)
-3. **Encode** - Replace detected names, phones, addresses with placeholders (`John Smith` → `PERSON_001`)
-4. **Analyze** - Send the sanitized text to AI (NotebookLM, etc.) for analysis
-5. **Decode** - Restore real names in the AI output
+| Step | Where | What happens |
+|:----:|:-----:|:-------------|
+| 1 | Local | **Convert** - PDF to text (with OCR for scanned pages) |
+| 2 | Local | **Split** - Break into chunks (500 pages each) |
+| 3 | Local | **Encode** - Replace names with placeholders |
+|   |       | `John Smith` → `PERSON_001` |
+|   |       | `+31 6 12345678` → `PHONE_001` |
+|   |       | Saves `mapping.json` locally |
+| 4 | Cloud | **Upload** sanitized files to AI (NotebookLM, etc.) |
+| 5 | Cloud | **AI analyzes** - finds patterns, builds timelines |
+| 6 | Local | **Download** AI output |
+| 7 | Local | **Decode** - restore real names using `mapping.json` |
 
 **This reduces—but does not eliminate—the risk of exposing sensitive data.** Always review the sanitized output before uploading.
 
@@ -104,32 +101,6 @@ DECODED:   "Timeline shows John Smith arrested on 16/10/2023, connected to
 
 **What changes:** Names, locations, phones, emails, IBANs, vehicles, addresses
 **What stays:** Structure, relationships, patterns, dates, amounts
-
-## The Workflow
-
-**On your computer (offline):**
-```
-PDF file
-    ↓ aiwhisperer convert
-Text files (part1.txt, part2.txt, ...)
-    ↓ aiwhisperer encode
-Sanitized files + mapping.json
-```
-
-**Upload sanitized files to cloud AI (NotebookLM, etc.)**
-
-**AI analyzes → finds patterns → builds timeline**
-
-**Download AI output**
-
-**On your computer (offline):**
-```
-AI output (with placeholders)
-    ↓ aiwhisperer decode (using mapping.json)
-Final report with real names
-```
-
-**The AI isn't evidence. It's a flashlight.** It helps you find where to look—in 20 minutes instead of 5 days.
 
 ## Quick Start
 
