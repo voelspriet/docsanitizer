@@ -1,0 +1,52 @@
+== LEGEND ==
+This document has been sanitized. Placeholders refer to:
+- PERSON_001 through PERSON_006: Individual names
+- PLACE_001 through PLACE_005: Locations
+- PHONE_001 through PHONE_003: Phone numbers
+- EMAIL_001, EMAIL_002: Email addresses
+- IBAN_001: Bank account
+- COMPANY_001: Company name
+- VEHICLE_001, VEHICLE_002: Vehicles
+============
+
+INVESTIGATION REPORT - CONFIDENTIAL
+
+Date: 14 March 2024
+Case Officer: Detective PERSON_001
+Reference: 2024/INV/0847
+
+SUMMARY OF EVENTS
+
+On 16 October 2023, officers arrested PERSON_002 at STREET_001 42, PLACE_001.
+PERSON_002 was found in possession of documentation linking him to PERSON_003,
+a known associate operating from PLACE_002.
+
+Financial records show transfers from PERSON_002's account (IBAN: IBAN_001)
+to COMPANY_001, totaling EUR 2.4 million between March and September 2023.
+
+WITNESS STATEMENT
+
+PERSON_004 (PHONE_001) confirmed she observed PERSON_002 meeting with
+PERSON_003 at PLACE_003, PLACE_004 on 3 separate occasions:
+- 12 March 2023
+- 28 May 2023
+- 14 September 2023
+
+Ms. PERSON_004's statement was corroborated by security footage and her colleague
+PERSON_005 (EMAIL_001), who was present at the May meeting.
+
+VEHICLE INFORMATION
+
+PERSON_002 was driving a VEHICLE_001 (license plate: XX-123-YY) registered to
+his company address at STREET_002 221, PLACE_004.
+
+PERSON_003 arrived in a VEHICLE_002, traced to a rental company in PLACE_005.
+
+RECOMMENDATIONS
+
+Further investigation into COMPANY_001 recommended.
+Company registered in Cyprus, beneficial owner unknown.
+
+Contact person: Inspector PERSON_006
+Phone: PHONE_002
+Email: EMAIL_002

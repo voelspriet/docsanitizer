@@ -1,0 +1,27 @@
+{
+  "version": "0.3.0",
+  "created": "2024-03-14T10:30:00",
+  "entries": {
+    "PERSON_001": {"canonical": "Jan de Vries", "category": "PERSON"},
+    "PERSON_002": {"canonical": "Johannes van der Berg", "category": "PERSON"},
+    "PERSON_003": {"canonical": "Marcus Johnson", "category": "PERSON"},
+    "PERSON_004": {"canonical": "Maria Petrova", "category": "PERSON"},
+    "PERSON_005": {"canonical": "Sophie Bakker", "category": "PERSON"},
+    "PERSON_006": {"canonical": "R. Detollenaere", "category": "PERSON"},
+    "PLACE_001": {"canonical": "Rotterdam", "category": "PLACE"},
+    "PLACE_002": {"canonical": "Brussels", "category": "PLACE"},
+    "PLACE_003": {"canonical": "Hotel Krasnapolsky", "category": "PLACE"},
+    "PLACE_004": {"canonical": "Amsterdam", "category": "PLACE"},
+    "PLACE_005": {"canonical": "Antwerp", "category": "PLACE"},
+    "STREET_001": {"canonical": "Stationsplein", "category": "STREET"},
+    "STREET_002": {"canonical": "Keizersgracht", "category": "STREET"},
+    "PHONE_001": {"canonical": "+31 6 12345678", "category": "PHONE"},
+    "PHONE_002": {"canonical": "052/26.08.60", "category": "PHONE"},
+    "EMAIL_001": {"canonical": "sophie.bakker@example.com", "category": "EMAIL"},
+    "EMAIL_002": {"canonical": "r.detollenaere@police.example.be", "category": "EMAIL"},
+    "IBAN_001": {"canonical": "NL91 ABNA 0417 1643 00", "category": "IBAN"},
+    "COMPANY_001": {"canonical": "Meridian Holdings Ltd", "category": "ORG"},
+    "VEHICLE_001": {"canonical": "BMW X5", "category": "VEHICLE"},
+    "VEHICLE_002": {"canonical": "Mercedes E-Class", "category": "VEHICLE"}
+  }
+}
