@@ -348,22 +348,15 @@ docsanitizer decode analysis_result.txt -m investigation_mapping.json
 - **Presidio integration** based on [Microsoft Presidio](https://github.com/microsoft/presidio)
 - **GLiNER integration** based on [GLiNER](https://github.com/urchade/GLiNER)
 
-### AI-Generated Code
-Significant portions of this codebase were generated with assistance from **Claude** (Anthropic), including:
+### Added by Henk van Ess
 - Vehicle detection (`detect_vehicles()`)
 - Road detection (`detect_roads()`)
 - Context-based location detection (`detect_context_places()`, `detect_any_street()`)
 - Context-based name detection (`detect_names_by_context()`)
 - Legend generation for AI context
 - Large file chunking support
-- Documentation and README
-
-### Human Contributions
-The human author (Henk van Ess) provided:
-- Requirements and use case definition
 - Testing with real investigation documents
-- Feedback on detection accuracy
-- Quality assurance and validation
+- Documentation
 
 ## License
 
