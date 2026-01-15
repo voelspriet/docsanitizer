@@ -201,6 +201,93 @@ def show_mapping(mapping_file):
         click.echo(f"    Occurrences: {entry.occurrences}")
 
 
+@cli.command('convert')
+@click.argument('pdf_file', type=click.Path(exists=True))
+@click.option('-o', '--output-dir', type=click.Path(), help='Output directory for text files')
+@click.option('-b', '--backend', type=click.Choice(['auto', 'marker', 'tesseract']),
+              default='auto', help='OCR backend: auto, marker (best), tesseract (fallback)')
+@click.option('--split/--no-split', default=False, help='Split into multiple files')
+@click.option('--max-pages', default=500, help='Max pages per file when splitting (default: 500)')
+@click.option('--info', is_flag=True, help='Just show PDF info, do not convert')
+def convert_cmd(pdf_file, output_dir, backend, split, max_pages, info):
+    """
+    Convert PDF to text with OCR support.
+
+    Handles both native PDFs and scanned documents.
+    Uses marker-pdf (best accuracy) or pytesseract (fallback).
+
+    Examples:
+
+        docsanitizer convert document.pdf
+
+        docsanitizer convert document.pdf -o ./output/
+
+        docsanitizer convert document.pdf --backend marker
+
+        docsanitizer convert large.pdf --split --max-pages 500
+
+        docsanitizer convert document.pdf --info
+    """
+    from .converter import convert_pdf, get_pdf_info, get_available_converters
+
+    pdf_path = Path(pdf_file)
+
+    # Show available converters
+    available = get_available_converters()
+    click.echo(f"\nAvailable converters:")
+    click.echo(f"  marker-pdf: {'yes' if available['marker'] else 'no (pip install marker-pdf)'}")
+    click.echo(f"  tesseract:  {'yes' if available['tesseract'] else 'no (pip install pymupdf pytesseract pdf2image)'}")
+
+    # Just show info
+    if info:
+        pdf_info = get_pdf_info(pdf_file)
+        click.echo(f"\nPDF Info:")
+        click.echo(f"  File: {pdf_info['path']}")
+        click.echo(f"  Size: {pdf_info['size_mb']:.1f} MB")
+        if 'pages' in pdf_info:
+            click.echo(f"  Pages: {pdf_info['pages']}")
+        if pdf_info.get('title'):
+            click.echo(f"  Title: {pdf_info['title']}")
+        return
+
+    # Default output directory
+    if not output_dir:
+        output_dir = pdf_path.parent
+
+    click.echo(f"\nConverting: {pdf_file}")
+    click.echo(f"Backend: {backend}")
+    click.echo(f"Output: {output_dir}")
+
+    try:
+        text, metadata = convert_pdf(
+            pdf_file,
+            output_dir=output_dir,
+            backend=backend,
+            split_pages=split,
+            max_pages_per_file=max_pages,
+        )
+
+        click.echo(f"\nDone!")
+        click.echo(f"Converter used: {metadata.get('converter', 'unknown')}")
+        if 'total_pages' in metadata:
+            click.echo(f"Pages: {metadata['total_pages']} ({metadata.get('native_pages', 0)} native, {metadata.get('ocr_pages', 0)} OCR)")
+        if 'output_file' in metadata:
+            click.echo(f"Output: {metadata['output_file']}")
+        click.echo(f"Text length: {len(text):,} characters")
+
+        click.echo(f"\nNext step: docsanitizer encode {metadata.get('output_file', pdf_path.stem + '.txt')}")
+
+    except ImportError as e:
+        click.echo(f"\nError: {e}")
+        click.echo("\nInstall a converter:")
+        click.echo("  pip install marker-pdf          (recommended, best accuracy)")
+        click.echo("  pip install pymupdf pytesseract pdf2image  (fallback)")
+        sys.exit(1)
+    except Exception as e:
+        click.echo(f"\nError: {e}")
+        sys.exit(1)
+
+
 def main():
     """Entry point."""
     cli()

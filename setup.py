@@ -17,11 +17,14 @@ setup(
         "spacy": ["spacy>=3.5.0"],
         "presidio": ["presidio-analyzer>=2.2.0", "presidio-anonymizer>=2.2.0"],
         "gliner": ["gliner>=0.2.0"],
+        "ocr": ["marker-pdf"],
+        "ocr-fallback": ["pymupdf>=1.23.0", "pytesseract>=0.3.10", "pdf2image>=1.16.0"],
         "all": [
             "spacy>=3.5.0",
             "presidio-analyzer>=2.2.0",
             "presidio-anonymizer>=2.2.0",
             "gliner>=0.2.0",
+            "marker-pdf",
         ],
     },
     entry_points={

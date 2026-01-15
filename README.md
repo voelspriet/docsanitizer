@@ -9,9 +9,10 @@
 DocSanitizer lets you use AI to analyze sensitive documents (criminal investigations, medical records, legal files) **without exposing the actual data**.
 
 **The workflow:**
-1. **Encode** - Replace all names, phones, addresses with placeholders (`John Smith` → `PERSON_001`)
-2. **Analyze** - Send the sanitized text to AI (NotebookLM, etc.) for analysis
-3. **Decode** - The tool automatically replaces placeholders back to real names in the AI output
+1. **Convert** - Extract text from PDFs (with OCR for scanned pages)
+2. **Encode** - Replace all names, phones, addresses with placeholders (`John Smith` → `PERSON_001`)
+3. **Analyze** - Send the sanitized text to AI (NotebookLM, etc.) for analysis
+4. **Decode** - The tool automatically replaces placeholders back to real names in the AI output
 
 **The AI never sees the real data. You get the full analysis.**
 
@@ -84,24 +85,26 @@ DECODED:   "Timeline shows John Smith arrested on 16/10/2023, connected to
 ```mermaid
 flowchart TB
     subgraph LOCAL1["YOUR COMPUTER (offline)"]
-        A[Original Document] --> B[DocSanitizer encode]
-        B --> C[Sanitized Document]
-        B --> D[mapping.json]
+        A[PDF Document] --> B[DocSanitizer convert]
+        B --> C[Text file]
+        C --> D[DocSanitizer encode]
+        D --> E[Sanitized text]
+        D --> F[mapping.json]
     end
 
-    C -->|upload| E
+    E -->|upload| G
 
     subgraph CLOUD["CLOUD AI (e.g. NotebookLM)"]
-        E["AI analyzes: PERSON_001 met PERSON_002..."]
-        E --> F[AI finds patterns, timelines, connections]
+        G["AI analyzes: PERSON_001 met PERSON_002..."]
+        G --> H[AI finds patterns, timelines, connections]
     end
 
-    F -->|download| G
+    H -->|download| I
 
     subgraph LOCAL2["YOUR COMPUTER (offline)"]
-        G[AI Analysis Output] --> H[DocSanitizer decode]
-        D -.-> H
-        H --> I[Final Report with real names]
+        I[AI Analysis Output] --> J[DocSanitizer decode]
+        F -.-> J
+        J --> K[Final Report with real names]
     end
 ```
 
@@ -112,8 +115,8 @@ flowchart TB
 ### Installation
 
 ```bash
-# Install with spaCy support (recommended)
-pip install docsanitizer[spacy]
+# Install with spaCy and OCR support (recommended)
+pip install docsanitizer[spacy,ocr]
 
 # Download Dutch language model
 python -m spacy download nl_core_news_sm
@@ -124,17 +127,23 @@ python -m spacy download nl_core_news_sm
 ### Command Line
 
 ```bash
-# Step 1: Sanitize your document
+# Step 1: Convert PDF to text (with OCR for scanned pages)
+docsanitizer convert investigation.pdf
+
+# Step 2: Sanitize the text
 docsanitizer encode investigation.txt --legend
 
 # Creates:
 #   investigation_sanitized.txt  ← Send this to AI
 #   investigation_mapping.json   ← Keep this LOCAL
 
-# Step 2: Upload sanitized file to NotebookLM/ChatGPT/Claude
+# IMPORTANT: Check investigation_sanitized.txt before uploading!
+# Make sure no sensitive data slipped through.
+
+# Step 3: Upload sanitized file to NotebookLM
 #         Ask AI to build timeline, find patterns, etc.
 
-# Step 3: Save AI output, then decode back to real names
+# Step 4: Save AI output, then decode back to real names
 docsanitizer decode ai_analysis.txt -m investigation_mapping.json
 
 # Result: Full analysis with real names restored
@@ -144,14 +153,19 @@ docsanitizer decode ai_analysis.txt -m investigation_mapping.json
 
 ```python
 from docsanitizer import encode, decode, Mapping
+from docsanitizer.converter import convert_pdf
+
+# Convert PDF to text
+text, metadata = convert_pdf("investigation.pdf")
 
 # Encode
-text = open("investigation.txt").read()
 sanitized, mapping = encode(text, language='nl')
 
 # Save
 open("sanitized.txt", "w").write(sanitized)
 mapping.save("mapping.json")
+
+# IMPORTANT: Review sanitized.txt before uploading!
 
 # ... send sanitized.txt to AI, get analysis back ...
 
@@ -159,6 +173,49 @@ mapping.save("mapping.json")
 ai_output = open("ai_analysis.txt").read()
 final = decode(ai_output, mapping)
 open("final_report.txt", "w").write(final)
+```
+
+## PDF Conversion
+
+DocSanitizer includes built-in PDF to text conversion with OCR for scanned documents.
+
+### OCR Backends
+
+| Backend | Accuracy | Install |
+|---------|----------|---------|
+| **marker-pdf** (recommended) | Excellent | `pip install marker-pdf` |
+| **pytesseract** (fallback) | Good | `pip install pymupdf pytesseract pdf2image` + Tesseract |
+
+marker-pdf uses Surya OCR under the hood - currently one of the most accurate OCR solutions available.
+
+### Usage
+
+```bash
+# Convert PDF (auto-selects best available backend)
+docsanitizer convert document.pdf
+
+# Force specific backend
+docsanitizer convert document.pdf --backend marker
+
+# Split large PDFs into multiple text files
+docsanitizer convert large.pdf --split --max-pages 500
+
+# Just show PDF info
+docsanitizer convert document.pdf --info
+```
+
+### Installing Tesseract (fallback)
+
+If marker-pdf doesn't work for you:
+
+```bash
+# macOS
+brew install tesseract tesseract-lang
+
+# Ubuntu/Debian
+apt install tesseract-ocr tesseract-ocr-nld tesseract-ocr-deu tesseract-ocr-fra
+
+# Windows: download from https://github.com/UB-Mannheim/tesseract/wiki
 ```
 
 ## What Gets Detected
