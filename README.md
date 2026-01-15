@@ -1,28 +1,28 @@
 # AIWhisperer
 
-**Whisper your documents to AI—without exposing sensitive data.**
+**Whisper your documents to AI—with reduced risk of exposing sensitive data.**
 
 > *"4,713 pages. An experienced researcher would need five days to build a timeline. I did it in 20 minutes, during a coffee break."*
 
 ## What This Tool Does
 
-AIWhisperer lets you **whisper** confidential documents to cloud AI. The AI hears everything—names, connections, patterns—but never sees the real data.
+AIWhisperer helps you use AI on confidential documents while minimizing the risk of leaking sensitive data to cloud servers.
 
-**How it works:** Your sensitive data stays local. Only sanitized placeholders go to the cloud. When AI whispers back its analysis, AIWhisperer restores the real names.
+**How it works:** The tool replaces names, phones, addresses, and other identifiers with placeholders before you upload. After AI analysis, it restores the original values locally.
 
 ```
-Your documents → [whisper sanitized data] → AI analyzes → [whisper back] → Real names restored
+Your documents → [sanitize locally] → AI analyzes placeholders → [decode locally] → Real names restored
 ```
 
-**The complete pipeline:**
+**The pipeline:**
 
 1. **Convert** - Extract text from PDFs (with OCR for scanned pages)
 2. **Split** - Automatically split large files into manageable chunks (500 pages each)
-3. **Whisper** - Replace all names, phones, addresses with placeholders (`John Smith` → `PERSON_001`)
+3. **Encode** - Replace detected names, phones, addresses with placeholders (`John Smith` → `PERSON_001`)
 4. **Analyze** - Send the sanitized text to AI (NotebookLM, etc.) for analysis
-5. **Decode** - AIWhisperer restores real names in the AI output
+5. **Decode** - Restore real names in the AI output
 
-**The AI never sees the real data. You get the full analysis.**
+**This reduces—but does not eliminate—the risk of exposing sensitive data.** Always review the sanitized output before uploading.
 
 **Handles massive files:** Built for a 170 MB, 4,713-page investigation file—far exceeding upload limits of ChatGPT, Gemini, and Claude.ai.
 
@@ -37,9 +37,9 @@ Once your documents are sanitized, whisper questions to AI:
 - **Extract data** - "List all financial transactions with dates and amounts"
 - **Cross-reference** - "Which people appear in multiple documents?"
 
-The AI works with `PERSON_001`, `PHONE_002`, `PLACE_003`. When it whispers back, AIWhisperer restores the real names: `PERSON_001` → `John Smith`, `PHONE_002` → `+32 489 66 70 88`, etc.
+The AI works with `PERSON_001`, `PHONE_002`, `PLACE_003`. After analysis, AIWhisperer restores the real names: `PERSON_001` → `John Smith`, `PHONE_002` → `+32 489 66 70 88`, etc.
 
-**Result:** Full AI-powered analysis with real names—your secrets never left your computer.
+**Result:** AI-powered analysis with reduced exposure of sensitive data.
 
 ## Important Warnings
 

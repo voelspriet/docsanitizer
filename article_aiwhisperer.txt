@@ -1,0 +1,144 @@
+# Whisper Your Documents to AI
+
+You have confidential files. You need AI to analyze them. But uploading names, phone numbers, and bank accounts to cloud servers is risky.
+
+AIWhisperer helps reduce that risk.
+
+---
+
+## Who needs this?
+
+**Journalists.** A source hands you 2,000 pages of leaked documents. Somewhere in there is the story. Reading it all takes a week. AI finds patterns in minutes. But uploading your source's data to Google is risky.
+
+**Lawyers.** Opposing counsel dumps 50,000 pages of discovery on your desk. You need to find the smoking gun. AI can help—but client confidentiality means you can't send names and case details to cloud servers.
+
+**Researchers.** You're analyzing court records, police files, medical studies. The data contains real people. Ethics boards don't approve of uploading patient names to ChatGPT.
+
+**HR professionals.** Internal investigation. Harassment complaints. Whistleblower reports. Names of employees, witnesses, accused. This cannot leave your laptop.
+
+**Accountants.** Client financials under audit. Bank statements, invoices, tax records. Names, account numbers, transaction details. Your professional liability insurance doesn't cover "uploaded to AI."
+
+Same problem. Same solution.
+
+---
+
+## The problem in practice
+
+You try to upload. Here's what happens:
+
+- ChatGPT: "Failed upload"
+- Claude.ai: "Files larger than 31 MB not supported"
+- Gemini: "File larger than 100 MB"
+
+Even if they accepted your file—should you?
+
+Those cloud servers log everything. Your confidential data sits on infrastructure you don't control. One breach, one subpoena, one rogue employee, and your source is exposed. Your client is compromised. Your career is over.
+
+So you don't upload. And you spend five days reading what AI could analyze in five minutes.
+
+---
+
+## The workaround
+
+Sanitize locally. Analyze in cloud. Decode locally.
+
+**Step 1:** Convert your PDFs to text. AIWhisperer handles scanned documents too—it runs OCR automatically.
+
+**Step 2:** Replace detected names, phones, emails, addresses, and bank accounts with placeholders. "Johannes van der Berg" becomes "PERSON_001". The tool saves a mapping file on your computer.
+
+**Step 3:** Upload the sanitized text to AI. The AI sees "PERSON_001 transferred €2.4M to COMPANY_001". It finds patterns, builds timelines, spots connections.
+
+**Step 4:** Download the AI's analysis. Run it through the decoder. "PERSON_001" becomes "Johannes van der Berg" again.
+
+This reduces the amount of sensitive data you send to cloud servers. It doesn't eliminate all risk—detection isn't perfect, and context can still reveal identities.
+
+---
+
+## How I use it
+
+I open Google NotebookLM and upload all my sanitized text files. NotebookLM is free, handles multiple documents, and shows references in the original text.
+
+Here's the trick most people miss: don't ask NotebookLM to build your timeline directly.
+
+Ask it to write you a prompt first.
+
+    "Give me a prompt I can use to create a comprehensive timeline
+    from these five documents."
+
+NotebookLM analyzes your files and generates a prompt optimized for your specific documents. Legal files get a different prompt than financial records.
+
+Then type: "Execute prompt."
+
+Three minutes later: a timeline. Dates, events, connections—all organized.
+
+NotebookLM has a "Data Table" button. Click it. Your timeline becomes a spreadsheet. Export to CSV. Run it through the decoder. Real names restored.
+
+Twenty minutes total. Not five days.
+
+---
+
+## What it catches
+
+The tool detects:
+
+- Names (via AI language models + context patterns)
+- Locations (cities, addresses, "te Antwerpen", "richting Rotterdam")
+- Phone numbers (Dutch, Belgian, international formats)
+- Email addresses
+- IBANs (European bank accounts)
+- Vehicles (makes and models)
+- Dates of birth (when near "geboren" or "born")
+- ID numbers (Dutch BSN, Belgian national numbers)
+
+Six languages: Dutch, English, German, French, Italian, Spanish.
+
+---
+
+## What it doesn't catch
+
+No tool is perfect.
+
+Nicknames. "Big J" isn't flagged as PERSON_001 unless you tell it.
+
+Rare spellings. Unusual name formats may slip through.
+
+Context clues. "The mayor of Rotterdam" still identifies someone even if the name is removed.
+
+Always check the sanitized output before uploading. Two minutes of review prevents disaster.
+
+---
+
+## The commands
+
+    # Install
+    pip install aiwhisperer[spacy,ocr]
+    python -m spacy download nl_core_news_sm
+
+    # Check what's installed
+    aiwhisperer check
+
+    # Convert PDF to text (splits large files automatically)
+    aiwhisperer convert document.pdf --split --max-pages 500
+
+    # Sanitize
+    aiwhisperer encode document_part1.txt --legend
+
+    # After AI analysis, decode back to real names
+    aiwhisperer decode ai_output.txt -m mapping.json
+
+---
+
+## The point
+
+AI is a flashlight. It shows you where to look. It doesn't replace verification—you still check every connection in the original documents.
+
+But instead of five days to find the pattern, it takes twenty minutes.
+
+AIWhisperer helps reduce the risk of exposing sensitive data to cloud AI. It's not foolproof—always check the sanitized output before uploading.
+
+---
+
+AIWhisperer is free and open source: github.com/voelspriet/aiwhisperer
+
+Related: "Speed reading a massive criminal investigation with AI"
+https://www.digitaldigging.org/p/speed-reading-a-massive-criminal
