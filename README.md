@@ -134,6 +134,32 @@ pip install docsanitizer[spacy,ocr]
 python -m spacy download nl_core_news_sm
 
 # Other languages available: en, de, fr, it, es
+
+# Check what's installed and what's missing
+docsanitizer check
+```
+
+The `check` command shows exactly what's installed and how to fix missing dependencies:
+
+```
+$ docsanitizer check
+
+DocSanitizer Dependency Check
+===================================
+Python: 3.10.5  (OK)
+
+PDF Conversion:
+  [x] marker-pdf: Installed (best accuracy)
+  [x] pymupdf: Installed
+  [x] tesseract: Installed (OCR fallback)
+
+NER Detection:
+  [x] spaCy: Installed (v3.8.11)
+
+Language Models:
+  [x] nl: nl_core_news_sm
+  [ ] en: en_core_web_sm
+      -> Fix: python -m spacy download en_core_web_sm
 ```
 
 ### Command Line

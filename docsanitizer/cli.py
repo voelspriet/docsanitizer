@@ -288,6 +288,118 @@ def convert_cmd(pdf_file, output_dir, backend, split, max_pages, info):
         sys.exit(1)
 
 
+@cli.command()
+def check():
+    """
+    Check installed dependencies and show what's missing.
+
+    Helps diagnose installation issues with clear fix instructions.
+
+    Example:
+
+        docsanitizer check
+    """
+    import platform
+
+    click.echo("\nDocSanitizer Dependency Check")
+    click.echo("=" * 35)
+
+    # Python version
+    py_version = platform.python_version()
+    py_major, py_minor = int(py_version.split('.')[0]), int(py_version.split('.')[1])
+    click.echo(f"\nPython: {py_version}", nl=False)
+    if py_minor < 10:
+        click.echo("  (marker-pdf needs 3.10+)")
+    else:
+        click.echo("  (OK)")
+
+    # PDF Conversion
+    click.echo("\nPDF Conversion:")
+    from .converter import get_available_converters
+    converters = get_available_converters()
+
+    # marker-pdf
+    if converters['marker']:
+        click.echo("  [x] marker-pdf: Installed (best accuracy)")
+    else:
+        if py_minor < 10:
+            click.echo("  [ ] marker-pdf: Requires Python 3.10+")
+        else:
+            click.echo("  [ ] marker-pdf: Not installed")
+            click.echo("      -> Fix: pip install marker-pdf")
+
+    # pymupdf
+    if converters['pymupdf']:
+        click.echo("  [x] pymupdf: Installed")
+    else:
+        click.echo("  [ ] pymupdf: Not installed")
+        click.echo("      -> Fix: pip install pymupdf")
+
+    # tesseract
+    if converters['tesseract']:
+        click.echo("  [x] tesseract: Installed (OCR fallback)")
+    else:
+        click.echo("  [ ] tesseract: Not found")
+        click.echo("      -> Fix: pip install pytesseract pdf2image")
+        click.echo("      -> Also: brew install tesseract tesseract-lang  (macOS)")
+        click.echo("               apt install tesseract-ocr  (Linux)")
+
+    # NER Detection
+    click.echo("\nNER Detection:")
+
+    # spaCy
+    spacy_ok = False
+    try:
+        import spacy
+        spacy_ok = True
+        click.echo(f"  [x] spaCy: Installed (v{spacy.__version__})")
+    except ImportError:
+        click.echo("  [ ] spaCy: Not installed")
+        click.echo("      -> Fix: pip install spacy")
+
+    # Language models
+    if spacy_ok:
+        click.echo("\nLanguage Models:")
+        models = {
+            'nl': 'nl_core_news_sm',
+            'en': 'en_core_web_sm',
+            'de': 'de_core_news_sm',
+            'fr': 'fr_core_news_sm',
+            'it': 'it_core_news_sm',
+            'es': 'es_core_news_sm',
+        }
+        any_model = False
+        for lang, model in models.items():
+            try:
+                spacy.load(model)
+                click.echo(f"  [x] {lang}: {model}")
+                any_model = True
+            except OSError:
+                click.echo(f"  [ ] {lang}: {model}")
+                click.echo(f"      -> Fix: python -m spacy download {model}")
+
+        if not any_model:
+            click.echo("\n  No language models installed!")
+            click.echo("  Install at least one: python -m spacy download nl_core_news_sm")
+
+    # Summary
+    click.echo("\n" + "-" * 35)
+
+    if converters['marker'] or (converters['pymupdf'] and converters['tesseract']):
+        click.echo("PDF conversion: Ready")
+    elif converters['pymupdf']:
+        click.echo("PDF conversion: Basic (no OCR for scanned pages)")
+    else:
+        click.echo("PDF conversion: Not available")
+
+    if spacy_ok:
+        click.echo("NER detection: Ready (spaCy)")
+    else:
+        click.echo("NER detection: Pattern-only mode (use --backend patterns)")
+
+    click.echo("")
+
+
 def main():
     """Entry point."""
     cli()

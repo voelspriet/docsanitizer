@@ -13,11 +13,12 @@ from typing import Optional, List, Tuple, Union
 
 
 def _check_marker_available() -> bool:
-    """Check if marker-pdf is installed."""
+    """Check if marker-pdf is installed and working."""
     try:
         from marker.converters.pdf import PdfConverter
         return True
-    except ImportError:
+    except Exception:
+        # Catch all errors: ImportError, ValueError (numpy compat), etc.
         return False
 
 
@@ -26,7 +27,7 @@ def _check_pymupdf_available() -> bool:
     try:
         import fitz
         return True
-    except ImportError:
+    except Exception:
         return False
 
 
