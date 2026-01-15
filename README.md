@@ -336,10 +336,35 @@ docsanitizer decode analysis_result.txt -m investigation_mapping.json
 - Some edge cases may need manual review
 - Non-Western names may require context-based detection (automatic)
 
+## Credits & Attribution
+
+### Concept & Requirements
+**Henk van Ess** ([digitaldigging.org](https://digitaldigging.org)) - Original workflow concept from "Speed reading a massive criminal investigation"
+
+### Code Sources
+- **Anonymization strategies** based on [mstack.nl/blogs/anonymize-pii-llm](https://mstack.nl/blogs/anonymize-pii-llm/)
+- **spaCy NER integration** follows standard [spaCy documentation](https://spacy.io/usage/linguistic-features#named-entities)
+- **BSN validation** uses the standard Dutch [11-proef algorithm](https://nl.wikipedia.org/wiki/Burgerservicenummer#Controle)
+- **Presidio integration** based on [Microsoft Presidio](https://github.com/microsoft/presidio)
+- **GLiNER integration** based on [GLiNER](https://github.com/urchade/GLiNER)
+
+### AI-Generated Code
+Significant portions of this codebase were generated with assistance from **Claude** (Anthropic), including:
+- Vehicle detection (`detect_vehicles()`)
+- Road detection (`detect_roads()`)
+- Context-based location detection (`detect_context_places()`, `detect_any_street()`)
+- Context-based name detection (`detect_names_by_context()`)
+- Legend generation for AI context
+- Large file chunking support
+- Documentation and README
+
+### Human Contributions
+The human author (Henk van Ess) provided:
+- Requirements and use case definition
+- Testing with real investigation documents
+- Feedback on detection accuracy
+- Quality assurance and validation
+
 ## License
 
 CC0 1.0 Universal - Public Domain
-
-## Author
-
-Based on work by [Henk van Ess](https://digitaldigging.org)
