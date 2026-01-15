@@ -92,33 +92,36 @@ DECODED:   "Timeline shows John Smith arrested on 16/10/2023, connected to
 
 ## The Workflow
 
-```mermaid
-flowchart TB
-    subgraph LOCAL1["YOUR COMPUTER (offline)"]
-        A[170 MB PDF] --> B[convert --split]
-        B --> C1[part1.txt]
-        B --> C2[part2.txt]
-        B --> C3[...]
-        C1 --> D[encode]
-        C2 --> D
-        C3 --> D
-        D --> E[Sanitized files]
-        D --> F[mapping.json]
-    end
+```
+LOCAL                          CLOUD                         LOCAL
+─────                          ─────                         ─────
 
-    E -->|upload| G
-
-    subgraph CLOUD["CLOUD AI"]
-        G[AI analyzes] --> H[Finds patterns]
-    end
-
-    H -->|download| I
-
-    subgraph LOCAL2["YOUR COMPUTER (offline)"]
-        I[AI output] --> J[decode]
-        F -.-> J
-        J --> K[Final report with real names]
-    end
+┌─────────────┐
+│  PDF file   │
+└──────┬──────┘
+       │ convert
+       ▼
+┌─────────────┐
+│  Text files │
+└──────┬──────┘
+       │ encode
+       ▼
+┌─────────────┐    upload     ┌─────────────┐
+│  Sanitized  │ ───────────►  │ AI analyzes │
+│  (no names) │               │ finds patterns│
+└─────────────┘               └──────┬──────┘
+       │                             │ download
+       │ mapping.json                ▼
+       │                      ┌─────────────┐
+       │                      │  AI output  │
+       │                      │ (placeholders)│
+       │                      └──────┬──────┘
+       │                             │
+       │         decode              │
+       └──────────────────►  ┌──────┴──────┐
+                             │ Final report │
+                             │ (real names) │
+                             └─────────────┘
 ```
 
 **The AI isn't evidence. It's a flashlight.** It helps you find where to look—in 20 minutes instead of 5 days.
