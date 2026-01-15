@@ -25,7 +25,7 @@ Anonymization strategies:
     - "hash": One-way hash
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from .encoder import encode, get_statistics
 from .decoder import decode
