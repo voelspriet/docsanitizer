@@ -41,40 +41,28 @@ DECODED:   "Timeline shows John Smith arrested on 16/10/2023, connected to
 
 ## The Workflow
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  YOUR COMPUTER (offline)                                    │
-│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │  Original   │ ──▶ │ DocSanitizer│ ──▶ │  Sanitized  │   │
-│  │  Document   │     │   encode    │     │  Document   │   │
-│  └─────────────┘     └─────────────┘     └──────┬──────┘   │
-│                             │                    │          │
-│                             ▼                    │          │
-│                      mapping.json                │          │
-│                      (keep local!)               │          │
-└──────────────────────────────────────────────────┼──────────┘
-                                                   │
-                                                   ▼ upload
-┌─────────────────────────────────────────────────────────────┐
-│  CLOUD AI (NotebookLM, ChatGPT, Claude, etc.)              │
-│                                                             │
-│  "PERSON_001 transferred AMOUNT_001 to COMPANY_001..."     │
-│                                                             │
-│  AI builds timeline, finds patterns, identifies connections │
-│  AI has NO IDEA who PERSON_001 actually is                 │
-└──────────────────────────────────────────────────┬──────────┘
-                                                   │
-                                                   ▼ download
-┌─────────────────────────────────────────────────────────────┐
-│  YOUR COMPUTER (offline)                                    │
-│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │ AI Analysis │ ──▶ │ DocSanitizer│ ──▶ │   Final     │   │
-│  │   Output    │     │   decode    │     │   Report    │   │
-│  └─────────────┘     └─────────────┘     └─────────────┘   │
-│                             ▲                               │
-│                             │                               │
-│                      mapping.json                           │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph LOCAL1["YOUR COMPUTER (offline)"]
+        A[Original Document] --> B[DocSanitizer encode]
+        B --> C[Sanitized Document]
+        B --> D[mapping.json]
+    end
+
+    C -->|upload| E
+
+    subgraph CLOUD["CLOUD AI (NotebookLM, ChatGPT, etc.)"]
+        E["AI analyzes: PERSON_001 met PERSON_002..."]
+        E --> F[AI finds patterns, timelines, connections]
+    end
+
+    F -->|download| G
+
+    subgraph LOCAL2["YOUR COMPUTER (offline)"]
+        G[AI Analysis Output] --> H[DocSanitizer decode]
+        D -.-> H
+        H --> I[Final Report with real names]
+    end
 ```
 
 **The AI isn't evidence. It's a flashlight.** It helps you find where to look—in 20 minutes instead of 5 days.
