@@ -93,30 +93,29 @@ DECODED:   "Timeline shows John Smith arrested on 16/10/2023, connected to
 ```mermaid
 flowchart TB
     subgraph LOCAL1["YOUR COMPUTER (offline)"]
-        A["170 MB PDF\n4,713 pages"] --> B[DocSanitizer convert --split]
-        B --> C1[part1.txt\n500 pages]
-        B --> C2[part2.txt\n500 pages]
-        B --> C3[... more parts]
-        C1 --> D[DocSanitizer encode]
+        A[170 MB PDF] --> B[convert --split]
+        B --> C1[part1.txt]
+        B --> C2[part2.txt]
+        B --> C3[...]
+        C1 --> D[encode]
         C2 --> D
         C3 --> D
-        D --> E["Sanitized text files\n(PERSON_001, PLACE_001...)"]
+        D --> E[Sanitized files]
         D --> F[mapping.json]
     end
 
     E -->|upload| G
 
-    subgraph CLOUD["CLOUD AI (e.g. NotebookLM)"]
-        G["AI analyzes sanitized files"]
-        G --> H["Finds patterns, builds timelines,\nmaps connections"]
+    subgraph CLOUD["CLOUD AI"]
+        G[AI analyzes] --> H[Finds patterns]
     end
 
     H -->|download| I
 
     subgraph LOCAL2["YOUR COMPUTER (offline)"]
-        I[AI Analysis Output] --> J[DocSanitizer decode]
+        I[AI output] --> J[decode]
         F -.-> J
-        J --> K["Final Report\nwith real names restored"]
+        J --> K[Final report with real names]
     end
 ```
 
