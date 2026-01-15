@@ -51,7 +51,7 @@ flowchart TB
 
     C -->|upload| E
 
-    subgraph CLOUD["CLOUD AI (NotebookLM, ChatGPT, etc.)"]
+    subgraph CLOUD["CLOUD AI (e.g. NotebookLM)"]
         E["AI analyzes: PERSON_001 met PERSON_002..."]
         E --> F[AI finds patterns, timelines, connections]
     end
@@ -139,9 +139,16 @@ open("final_report.txt", "w").write(final)
 
 ## FAQ
 
-### Why not just use ChatGPT directly?
+### Why not just upload to AI directly?
 
 **Security.** Criminal investigations, medical records, legal documents—you can't upload these to cloud AI. DocSanitizer lets you get AI analysis without exposing the actual data.
+
+**Size limits.** Most chatbots can't handle large files anyway:
+- ChatGPT: "Failed upload"
+- Gemini: "File larger than 100 MB"
+- Claude.ai: "You may not upload files larger than 31 MB"
+
+The original workflow uses **Claude Code** (runs locally, no upload limits) for file conversion, and **NotebookLM** for analysis of the sanitized text.
 
 ### Can't AI guess who PERSON_001 is from context?
 
