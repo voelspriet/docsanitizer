@@ -385,12 +385,21 @@ class ConvertWidget(QWidget):
         
         # Calculate stats
         pdf_path = Path(self.current_pdf)
-        pdf_size = pdf_path.stat().st_size / (1024 * 1024)  # MB
-        text_size = len(text.encode('utf-8')) / (1024 * 1024)  # MB
-        reduction = ((pdf_size - text_size) / pdf_size) * 100 if pdf_size > 0 else 0
+        pdf_size_bytes = pdf_path.stat().st_size
+        text_size_bytes = len(text.encode('utf-8'))
+        reduction = ((pdf_size_bytes - text_size_bytes) / pdf_size_bytes) * 100 if pdf_size_bytes > 0 else 0
+        
+        # Format sizes appropriately (KB for small, MB for large)
+        def format_size(size_bytes):
+            if size_bytes < 1024:
+                return f"{size_bytes} B"
+            elif size_bytes < 1024 * 1024:
+                return f"{size_bytes / 1024:.1f} KB"
+            else:
+                return f"{size_bytes / (1024 * 1024):.1f} MB"
         
         stats = f"<b>Conversion complete!</b><br>"
-        stats += f"PDF: {pdf_size:.1f} MB → Text: {text_size:.2f} MB ({reduction:.0f}% smaller)<br>"
+        stats += f"PDF: {format_size(pdf_size_bytes)} → Text: {format_size(text_size_bytes)} ({reduction:.0f}% smaller)<br>"
         
         if 'total_pages' in metadata:
             stats += f"Pages: {metadata['total_pages']}"
