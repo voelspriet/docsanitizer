@@ -8,7 +8,7 @@ long_description = readme.read_text(encoding="utf-8") if readme.exists() else ""
 
 setup(
     name="aiwhisperer",
-    version="0.4.0",
+    version="0.5.0",
     description="Shrink massive PDFs to fit AI upload limits. Sanitize before uploading to reduce risk of exposing sensitive data.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -33,6 +33,11 @@ setup(
         "ocr": ["marker-pdf"],
         "ocr-fallback": ["pymupdf>=1.23.0", "pytesseract>=0.3.10", "pdf2image>=1.16.0"],
         "gui": ["PySide6>=6.5.0"],
+        "gdrive": [
+            "google-api-python-client>=2.100.0",
+            "google-auth-oauthlib>=1.1.0",
+            "google-auth-httplib2>=0.1.0",
+        ],
         "all": [
             "spacy>=3.5.0",
             "presidio-analyzer>=2.2.0",

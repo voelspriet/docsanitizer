@@ -59,10 +59,21 @@ hidden_imports = [
     'aiwhisperer.gui',
     'aiwhisperer.gui.main',
     'aiwhisperer.gui.main_window',
+    'aiwhisperer.gui.convert_widget',
     'aiwhisperer.gui.encode_widget',
     'aiwhisperer.gui.decode_widget',
     'aiwhisperer.gui.settings_dialog',
     'aiwhisperer.gui.dependency_checker',
+    'aiwhisperer.gui.google_drive',
+    'aiwhisperer.converter',
+    
+    # Google Drive API (optional)
+    'googleapiclient',
+    'googleapiclient.discovery',
+    'googleapiclient.http',
+    'google.oauth2.credentials',
+    'google_auth_oauthlib.flow',
+    'google.auth.transport.requests',
     
     # spaCy (optional but commonly used)
     'spacy',
@@ -166,6 +177,12 @@ app = BUNDLE(
         'NSRequiresAquaSystemAppearance': False,  # Support dark mode
         'LSMinimumSystemVersion': '10.15',
         'CFBundleDocumentTypes': [
+            {
+                'CFBundleTypeName': 'PDF Document',
+                'CFBundleTypeRole': 'Viewer',
+                'LSHandlerRank': 'Alternate',
+                'LSItemContentTypes': ['com.adobe.pdf'],
+            },
             {
                 'CFBundleTypeName': 'Text Document',
                 'CFBundleTypeRole': 'Editor',

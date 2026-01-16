@@ -25,6 +25,7 @@ except ImportError:
     from PyQt6.QtCore import Qt, QSettings
     from PyQt6.QtGui import QAction, QKeySequence
 
+from aiwhisperer.gui.convert_widget import ConvertWidget
 from aiwhisperer.gui.encode_widget import EncodeWidget
 from aiwhisperer.gui.decode_widget import DecodeWidget
 from aiwhisperer.gui.settings_dialog import SettingsDialog
@@ -42,7 +43,7 @@ class MainWindow(QMainWindow):
     
     def setup_ui(self):
         """Set up the main user interface."""
-        self.setWindowTitle("AIWhisperer - Secure Document Sanitization")
+        self.setWindowTitle("AIWhisperer - PDF to Text with Privacy")
         self.setMinimumSize(900, 700)
         
         # Central widget
@@ -57,20 +58,25 @@ class MainWindow(QMainWindow):
         self.tab_widget = QTabWidget()
         layout.addWidget(self.tab_widget)
         
-        # Encode tab
-        self.encode_widget = EncodeWidget()
-        self.tab_widget.addTab(self.encode_widget, "Encode (Sanitize)")
+        # Convert tab (new simplified interface)
+        self.convert_widget = ConvertWidget()
+        self.tab_widget.addTab(self.convert_widget, "Convert PDF")
         
         # Decode tab
         self.decode_widget = DecodeWidget()
-        self.tab_widget.addTab(self.decode_widget, "Decode (Restore)")
+        self.tab_widget.addTab(self.decode_widget, "Decode AI Output")
+        
+        # Advanced tab (old encode widget)
+        self.encode_widget = EncodeWidget()
+        self.tab_widget.addTab(self.encode_widget, "Advanced")
         
         # Status bar
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)
-        self.status_bar.showMessage("Ready")
+        self.status_bar.showMessage("Ready - Drop a PDF to get started")
         
         # Connect signals
+        self.convert_widget.status_message.connect(self.status_bar.showMessage)
         self.encode_widget.status_message.connect(self.status_bar.showMessage)
         self.decode_widget.status_message.connect(self.status_bar.showMessage)
     
@@ -141,6 +147,7 @@ class MainWindow(QMainWindow):
     
     def apply_settings(self):
         """Apply settings to all widgets."""
+        self.convert_widget.apply_settings(self.settings)
         self.encode_widget.apply_settings(self.settings)
         self.decode_widget.apply_settings(self.settings)
     
@@ -163,16 +170,17 @@ class MainWindow(QMainWindow):
             self,
             "About AIWhisperer",
             "<h2>AIWhisperer</h2>"
-            "<p>Version 0.3.0</p>"
-            "<p>Secure document sanitization for AI analysis.</p>"
-            "<p>AIWhisperer enables secure analysis of confidential documents "
-            "using cloud-based AI services by replacing sensitive information "
-            "with reversible placeholders.</p>"
+            "<p>Version 0.5.0</p>"
+            "<p>PDF to text with optional sanitization for AI analysis.</p>"
+            "<p>AIWhisperer converts large PDFs to text and optionally sanitizes "
+            "sensitive information before uploading to cloud AI services like "
+            "NotebookLM, Claude, or ChatGPT.</p>"
             "<p><b>Key Features:</b></p>"
             "<ul>"
-            "<li>Automatic PII detection (names, phones, emails, etc.)</li>"
+            "<li>PDF to text conversion with OCR support</li>"
+            "<li>Optional PII sanitization for confidential files</li>"
+            "<li>Google Drive integration for easy AI upload</li>"
             "<li>Reversible anonymization with mapping files</li>"
-            "<li>Multiple detection backends (spaCy, patterns, Presidio)</li>"
             "<li>Support for multiple languages</li>"
             "</ul>"
             "<p>License: CC0-1.0 Public Domain</p>"
