@@ -1,34 +1,194 @@
 """
 AIWhisperer GUI - Main Window
 
-This module provides the main application window with tabs for encoding and decoding.
+Digital Digging aesthetic: Dark theme, visual pipeline workflow, amber accents.
+Professional investigative tool feel.
 """
 
 import os
 import sys
+import webbrowser
 
 # Try PySide6 first, fall back to PyQt6
 try:
     from PySide6.QtWidgets import (
         QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-        QTabWidget, QMenuBar, QMenu, QStatusBar, QMessageBox,
-        QFileDialog, QLabel
+        QMenuBar, QMenu, QStatusBar, QMessageBox,
+        QFileDialog, QLabel, QFrame, QPushButton,
+        QStackedWidget, QApplication
     )
     from PySide6.QtCore import Qt, QSettings
-    from PySide6.QtGui import QAction, QKeySequence
+    from PySide6.QtGui import QAction, QKeySequence, QFont
 except ImportError:
     from PyQt6.QtWidgets import (
         QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-        QTabWidget, QMenuBar, QMenu, QStatusBar, QMessageBox,
-        QFileDialog, QLabel
+        QMenuBar, QMenu, QStatusBar, QMessageBox,
+        QFileDialog, QLabel, QFrame, QPushButton,
+        QStackedWidget, QApplication
     )
     from PyQt6.QtCore import Qt, QSettings
-    from PyQt6.QtGui import QAction, QKeySequence
+    from PyQt6.QtGui import QAction, QKeySequence, QFont
 
 from aiwhisperer.gui.convert_widget import ConvertWidget
-from aiwhisperer.gui.encode_widget import EncodeWidget
 from aiwhisperer.gui.decode_widget import DecodeWidget
 from aiwhisperer.gui.settings_dialog import SettingsDialog
+
+# Version
+VERSION = "0.5.0"
+
+# Digital Digging color palette
+COLORS = {
+    'bg_dark': '#1a1a2e',
+    'bg_medium': '#16213e',
+    'bg_light': '#0f3460',
+    'accent': '#e6a919',
+    'accent_hover': '#f5b82e',
+    'text_primary': '#eaeaea',
+    'text_secondary': '#a0a0a0',
+    'text_muted': '#666666',
+    'border': '#2a2a4a',
+    'success': '#4ade80',
+    'error': '#f87171',
+}
+
+# Dark theme stylesheet
+DARK_STYLESHEET = f"""
+QMainWindow, QWidget {{
+    background-color: {COLORS['bg_dark']};
+    color: {COLORS['text_primary']};
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+}}
+
+QLabel {{
+    color: {COLORS['text_primary']};
+}}
+
+QPushButton {{
+    background-color: {COLORS['bg_light']};
+    color: {COLORS['text_primary']};
+    border: 1px solid {COLORS['border']};
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: 500;
+}}
+
+QPushButton:hover {{
+    background-color: {COLORS['accent']};
+    color: {COLORS['bg_dark']};
+    border-color: {COLORS['accent']};
+}}
+
+QPushButton:disabled {{
+    background-color: {COLORS['bg_medium']};
+    color: {COLORS['text_muted']};
+}}
+
+QTextEdit, QPlainTextEdit {{
+    background-color: {COLORS['bg_medium']};
+    color: {COLORS['text_primary']};
+    border: 1px solid {COLORS['border']};
+    border-radius: 6px;
+    padding: 8px;
+    selection-background-color: {COLORS['accent']};
+}}
+
+QComboBox {{
+    background-color: {COLORS['bg_medium']};
+    color: {COLORS['text_primary']};
+    border: 1px solid {COLORS['border']};
+    border-radius: 6px;
+    padding: 6px 12px;
+}}
+
+QComboBox:hover {{
+    border-color: {COLORS['accent']};
+}}
+
+QComboBox QAbstractItemView {{
+    background-color: {COLORS['bg_medium']};
+    color: {COLORS['text_primary']};
+    selection-background-color: {COLORS['accent']};
+}}
+
+QProgressBar {{
+    background-color: {COLORS['bg_medium']};
+    border: 1px solid {COLORS['border']};
+    border-radius: 4px;
+    text-align: center;
+    color: {COLORS['text_primary']};
+}}
+
+QProgressBar::chunk {{
+    background-color: {COLORS['accent']};
+    border-radius: 3px;
+}}
+
+QGroupBox {{
+    background-color: {COLORS['bg_medium']};
+    border: 1px solid {COLORS['border']};
+    border-radius: 8px;
+    margin-top: 12px;
+    padding-top: 8px;
+    font-weight: 600;
+}}
+
+QGroupBox::title {{
+    color: {COLORS['text_secondary']};
+    subcontrol-origin: margin;
+    left: 12px;
+    padding: 0 8px;
+}}
+
+QMenuBar {{
+    background-color: {COLORS['bg_dark']};
+    color: {COLORS['text_primary']};
+    border-bottom: 1px solid {COLORS['border']};
+}}
+
+QMenuBar::item:selected {{
+    background-color: {COLORS['bg_light']};
+}}
+
+QMenu {{
+    background-color: {COLORS['bg_medium']};
+    color: {COLORS['text_primary']};
+    border: 1px solid {COLORS['border']};
+}}
+
+QMenu::item:selected {{
+    background-color: {COLORS['accent']};
+    color: {COLORS['bg_dark']};
+}}
+
+QStatusBar {{
+    background-color: {COLORS['bg_medium']};
+    color: {COLORS['text_secondary']};
+    border-top: 1px solid {COLORS['border']};
+}}
+
+QScrollBar:vertical {{
+    background-color: {COLORS['bg_dark']};
+    width: 12px;
+}}
+
+QScrollBar::handle:vertical {{
+    background-color: {COLORS['border']};
+    border-radius: 6px;
+    min-height: 20px;
+}}
+
+QScrollBar::handle:vertical:hover {{
+    background-color: {COLORS['text_muted']};
+}}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
+    height: 0px;
+}}
+
+QSplitter::handle {{
+    background-color: {COLORS['border']};
+}}
+"""
 
 
 class MainWindow(QMainWindow):

@@ -88,6 +88,8 @@ jobs:
           pip install regex
           # Install pymupdf for PDF conversion (required for the app to work)
           pip install pymupdf
+          # Install Google Drive API for upload feature
+          pip install google-api-python-client google-auth-oauthlib google-auth-httplib2
           # Install the package with spacy support
           pip install -e ".[spacy]"
           

@@ -243,11 +243,26 @@ def convert_pdf(
         # PyMuPDF only, no OCR
         import fitz
         doc = fitz.open(str(pdf_path))
-        text = ""
-        for page in doc:
-            text += page.get_text() + "\n\n"
+        all_text = []
+        for page_num, page in enumerate(doc):
+            page_text = page.get_text()
+            all_text.append(f"--- Page {page_num + 1} ---\n{page_text}")
         doc.close()
-        metadata = {"converter": "pymupdf", "note": "No OCR - scanned pages may be empty"}
+        text = "\n\n".join(all_text)
+        metadata = {
+            "converter": "pymupdf",
+            "total_pages": len(all_text),
+            "note": "No OCR - scanned pages may be empty"
+        }
+        
+        # Save if output_dir specified
+        if output_dir:
+            output_dir = Path(output_dir)
+            output_dir.mkdir(parents=True, exist_ok=True)
+            output_file = output_dir / f"{pdf_path.stem}.txt"
+            with open(output_file, 'w', encoding='utf-8') as f:
+                f.write(text)
+            metadata["output_file"] = str(output_file)
 
     else:
         raise ValueError(f"Unknown backend: {backend}")

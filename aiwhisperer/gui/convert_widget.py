@@ -47,6 +47,7 @@ class ConvertWorker(QThread):
         try:
             self.progress.emit("Converting PDF to text...")
             
+            from pathlib import Path
             from aiwhisperer.converter import convert_pdf
             
             text, metadata = convert_pdf(
@@ -73,9 +74,25 @@ class ConvertWorker(QThread):
                 legend = generate_legend(mapping)
                 text = legend + "\n\n" + sanitized_text
                 
+                # Save sanitized text to disk
+                pdf_path = Path(self.pdf_path)
+                output_dir = Path(self.output_dir)
+                output_dir.mkdir(parents=True, exist_ok=True)
+                
+                # Save sanitized text
+                sanitized_file = output_dir / f"{pdf_path.stem}_sanitized.txt"
+                with open(sanitized_file, 'w', encoding='utf-8') as f:
+                    f.write(text)
+                
+                # Save mapping file automatically
+                mapping_file = output_dir / f"{pdf_path.stem}_mapping.json"
+                mapping.save(str(mapping_file))
+                
                 # Update metadata
                 metadata['sanitized'] = True
                 metadata['entities_replaced'] = len(mapping.entries) if hasattr(mapping, 'entries') else 0
+                metadata['output_file'] = str(sanitized_file)
+                metadata['mapping_file'] = str(mapping_file)
             
             self.finished.emit(text, metadata, mapping)
             
@@ -386,7 +403,15 @@ class ConvertWidget(QWidget):
         if mapping:
             entities = len(mapping.entries) if hasattr(mapping, 'entries') else 0
             stats += f"<b>Entities sanitized: {entities}</b><br>"
-            stats += f"Output: {metadata.get('output_file', 'N/A')}"
+            output_file = metadata.get('output_file', 'N/A')
+            mapping_file = metadata.get('mapping_file', '')
+            stats += f"Output: {output_file}<br>"
+            if mapping_file:
+                stats += f"Mapping: {mapping_file}"
+        else:
+            output_file = metadata.get('output_file', '')
+            if output_file:
+                stats += f"Output: {output_file}"
         
         self.stats_label.setText(stats)
         

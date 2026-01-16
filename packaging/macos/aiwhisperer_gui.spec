@@ -119,6 +119,19 @@ try:
 except Exception as e:
     print(f"Warning: Could not collect fitz: {e}")
 
+# Collect Google API client data
+google_datas = []
+google_binaries = []
+google_hiddenimports = []
+for pkg in ['googleapiclient', 'google.oauth2', 'google_auth_oauthlib', 'google.auth']:
+    try:
+        pkg_datas, pkg_binaries, pkg_hiddenimports = collect_all(pkg)
+        google_datas.extend(pkg_datas)
+        google_binaries.extend(pkg_binaries)
+        google_hiddenimports.extend(pkg_hiddenimports)
+    except Exception as e:
+        print(f"Warning: Could not collect {pkg}: {e}")
+
 # Collect spaCy data (for language models)
 spacy_datas = []
 spacy_binaries = []
@@ -145,15 +158,18 @@ datas = [
 ]
 datas.extend(pymupdf_datas)
 datas.extend(spacy_datas)
+datas.extend(google_datas)
 
 # Additional binaries
 binaries = []
 binaries.extend(pymupdf_binaries)
 binaries.extend(spacy_binaries)
+binaries.extend(google_binaries)
 
 # Extend hidden imports
 hidden_imports.extend(pymupdf_hiddenimports)
 hidden_imports.extend(spacy_hiddenimports)
+hidden_imports.extend(google_hiddenimports)
 
 # Analysis
 a = Analysis(
