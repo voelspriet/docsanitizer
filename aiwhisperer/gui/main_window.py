@@ -15,7 +15,7 @@ try:
         QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
         QMenuBar, QMenu, QStatusBar, QMessageBox,
         QFileDialog, QLabel, QFrame, QPushButton,
-        QStackedWidget, QApplication
+        QStackedWidget, QApplication, QTabWidget
     )
     from PySide6.QtCore import Qt, QSettings
     from PySide6.QtGui import QAction, QKeySequence, QFont
@@ -24,13 +24,14 @@ except ImportError:
         QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
         QMenuBar, QMenu, QStatusBar, QMessageBox,
         QFileDialog, QLabel, QFrame, QPushButton,
-        QStackedWidget, QApplication
+        QStackedWidget, QApplication, QTabWidget
     )
     from PyQt6.QtCore import Qt, QSettings
     from PyQt6.QtGui import QAction, QKeySequence, QFont
 
 from aiwhisperer.gui.convert_widget import ConvertWidget
 from aiwhisperer.gui.decode_widget import DecodeWidget
+from aiwhisperer.gui.encode_widget import EncodeWidget
 from aiwhisperer.gui.settings_dialog import SettingsDialog
 
 # Version
