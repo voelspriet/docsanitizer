@@ -23,7 +23,7 @@ except ImportError:
         print("Install with: pip install PySide6")
         sys.exit(1)
 
-from aiwhisperer.gui.main_window import MainWindow
+from aiwhisperer.gui.main_window import MainWindow, DARK_STYLESHEET
 
 
 def main():
@@ -36,11 +36,14 @@ def main():
     
     app = QApplication(sys.argv)
     app.setApplicationName("AIWhisperer")
-    app.setApplicationVersion("0.3.0")
+    app.setApplicationVersion("0.5.0")
     app.setOrganizationName("AIWhisperer")
     
-    # Set application style
+    # Set application style (Fusion works best with dark themes)
     app.setStyle("Fusion")
+    
+    # Apply dark theme stylesheet
+    app.setStyleSheet(DARK_STYLESHEET)
     
     # Create and show main window
     window = MainWindow()
