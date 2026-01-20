@@ -4,7 +4,7 @@
 [![License: CC0](https://img.shields.io/badge/license-CC0-green.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
 [![Version](https://img.shields.io/badge/version-0.5.0-orange.svg)](https://github.com/voelspriet/aiwhisperer/releases)
 
-**Whisper your documents to AI—with reduced risk of exposing sensitive data.**
+** Based on DPG Media Course. Whisper your documents to AI—with reduced risk of exposing sensitive data.**
 
 > *"4,713 pages. An experienced researcher would need five days to build a timeline. I did it in 20 minutes, during a coffee break."*
 
@@ -426,4 +426,5 @@ CC0 1.0 Universal - Public Domain
 ---
 
 *"That's the real skill nowadays: knowing which buttons to press, and knowing when to stop pressing and start thinking."*
+
 
